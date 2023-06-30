@@ -86,7 +86,14 @@ class Engine:
         self.board.set_fen(fen)
         self.leaves_reached = 0
 
-        # who is more able to win
+
+    # random res 
+    def random_response(self):
+        response = random.choice(list(self.board.legal_moves))
+        return str(response)
+
+
+    # who is more able to win
     def who_is_better(self):
         score = 0
        
@@ -95,29 +102,6 @@ class Engine:
             score -= len(self.board.pieces(i, chess.BLACK)) * self.piece_values[i]
 
         return score
-    # random res 
-    def random_response(self):
-        response = random.choice(list(self.board.legal_moves))
-        return str(response)
-
-  def total_leaves(self):
-        leaves = self.leaves_reached
-        self.leaves_reached = 0
-        return leaves
-
-
-    def order_moves(self):
-        moves = list(self.board.legal_moves)
-        scores = []
-        for move in moves:
-            self.board.push(move)
-            # scores.append(self.who_is_better())
-            scores.append(self.who_is_better())
-            self.board.pop()
-        sorted_indexes = sorted(range(len(scores)), key=lambda i: scores[i], reverse=False)
-        return [moves[i] for i in sorted_indexes]
-
-
 
     # MH* to evaluate the strength of a given chess position, based on the number and placement of the pieces on the board.
     def position_eval(self):
@@ -267,7 +251,23 @@ class Engine:
         return str(move_sequence[-1])
 
 
-  
+    def total_leaves(self):
+        leaves = self.leaves_reached
+        self.leaves_reached = 0
+        return leaves
+
+
+    def order_moves(self):
+        moves = list(self.board.legal_moves)
+        scores = []
+        for move in moves:
+            self.board.push(move)
+            # scores.append(self.who_is_better())
+            scores.append(self.who_is_better())
+            self.board.pop()
+        sorted_indexes = sorted(range(len(scores)), key=lambda i: scores[i], reverse=False)
+        return [moves[i] for i in sorted_indexes]
+
 
     def iterative_deepening(self, depth):
         # depth_neg, depth_pos, move, alpha, beta, prev_moves, maximiser)
