@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>ChessBot</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.js"></script>
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></link>
+        <link rel="stylesheet" href="{{ url_for('static', filename='libs/chessboard/css/chessboard-0.3.0.css') }}"></link>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='rook_favicon.ico') }}">
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+              integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+              integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.css">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.2/chess.js"></script>
+        <script type="text/javascript"> $SCRIPT_ROOT = {{ request.script_root|tojson|safe }}; </script>
+        <script type="text/javascript" src="{{ url_for('static',filename='libs/chessboard/js/chessboard-0.3.0.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static',filename='libs/chessboard/js/chessboard-0.3.0.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static',filename='scripts.js') }}"></script>
+        <style>
+            *, *:before, *:after {
+	 box-sizing: border-box;
+	 position: relative;
+}
+ html, body {
+	 overflow: hidden;
+	 height: 100%;
+}
+ .fake-body {
+    
+	 font-family: 'Raleway', sans-serif;
+	 color: white;
+	 display: flex;
+	 align-items: center;
+	 justify-content: center;
+	 background: url('https://iamjoshellis-codepen.s3.amazonaws.com/damon-big.jpg');
+	 background-size: cover;
+}
+ .fake-body:after {
+	 content: '';
+	 position: absolute;
+	 top: 0;
+	 left: 0;
+	 bottom: 0;
+	 right: 0;
+	 background: linear-gradient(to top, rgba(0, 0, 0, .25), rgba(0, 0, 0, 0));
+}
+ .background-image {
+	 z-index: 1;
+	 position: absolute;
+	 top: 0;
+	 left: 0;
+	 bottom: 0;
+	 right: 0;
+	 filter: blur(7px);
+	 background: url('https://iamjoshellis-codepen.s3.amazonaws.com/damon-big.jpg');
+	 background-size: cover;
+	 transition: 0.3s ease-out;
+}
+ .background-image:after {
+	 content: '';
+	 position: absolute;
+	 top: 0;
+	 left: 0;
+	 bottom: 0;
+	 right: 0;
+	 background: linear-gradient(to top, rgba(0, 0, 0, .25), rgba(0, 0, 0, 0));
+}
+ .tv-film__bg {
+	 box-shadow: 0 5px 5px -5px rgba(0, 0, 0, 0.25);
+	 width: 250px;
+	 height: 250px;
+	 display: flex;
+	 align-items: center;
+	 justify-content: center;
+	 cursor: pointer;
+	 background: url('https://iamjoshellis-codepen.s3.amazonaws.com/damon-small.jpg');
+	 background-size: cover;
+	 border-radius: 20px;
+	 clip-path: polygon(20px 0, calc(100% - 20px) 0, 100% 20px, 100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%, 0 calc(100% - 20px), 0 20px);
+}
+ .tv-film__bg:after {
+	 content: '';
+	 position: absolute;
+	 top: 0;
+	 left: 0;
+	 right: 0;
+	 bottom: 0;
+	 background-color: rgba(0, 0, 0, 0);
+	 transition: background-color 0.3s ease-out;
+}
+ .tv-film__content {
+	 z-index: 100;
+	 width: 50%;
+	 border-radius: 50%;
+	 text-align: center;
+	 position: relative;
+	 background: rgba(29, 210, 175, 0.9);
+	 padding: 0.5em;
+	 color: white;
+	 transition: transform 0.3s ease-out;
+}
+ .tv-film__content:before {
+	 display: block;
+	 content: "";
+	 width: 100%;
+	 padding-top: 100%;
+}
+ .tv-film__content > * {
+	 position: absolute;
+	 top: 0;
+	 left: 0;
+	 right: 0;
+	 bottom: 0;
+}
+ .tv-film__title {
+	 display: flex;
+	 align-items: center;
+	 justify-content: center;
+	 text-transform: uppercase;
+	 font-family: 'Montserrat', sans-serif;
+}
+ .corner-container {
+	 pointer-events: none;
+	 position: absolute;
+	 top: 0;
+	 left: 0;
+	 right: 0;
+	 bottom: 0;
+	 transition: all 0.4s ease-in;
+}
+ .corner {
+	 position: absolute;
+	 width: 10px;
+	 height: 10px;
+	 border: 2px solid white;
+	 transition: all 0.3s ease-out;
+	 opacity: 0;
+}
+ .corner--top {
+	 border-bottom: none;
+	 top: 0;
+}
+ .corner--bottom {
+	 border-top: none;
+	 bottom: 0;
+}
+ .corner--left {
+	 left: 0;
+	 border-right: none;
+}
+ .corner--right {
+	 right: 0;
+	 border-left: none;
+}
+ .tv-film__item {
+    scale: 1.5;
+	 margin: 15px 15px 0 0;
+	 transition: transform 0.3s ease-out;
+	 z-index: 1000;
+}
+
+ .tv-film__item:hover .tv-film__bg:after {
+	 background-color: rgba(0, 0, 0, .1);
+}
+ .tv-film__item:hover .tv-film__content {
+	 transform: scale(1.1);
+}
+ .tv-film__item:hover .corner {
+	 opacity: 1;
+}
+ .tv-film__item:hover .corner--top.corner--left {
+	 transform: translate(-50%, -50%) scale(4);
+}
+ .tv-film__item:hover .corner--top.corner--right {
+	 transform: translate(50%, -50%) scale(4);
+}
+ .tv-film__item:hover .corner--bottom.corner--left {
+	 transform: translate(-50%, 50%) scale(4);
+}
+ .tv-film__item:hover .corner--bottom.corner--right {
+	 transform: translate(50%, 50%) scale(4);
+}
+ .tv-film__item:hover .corner-container {
+	 transform: rotate(210deg) scale(0.5);
+}
+ /* .tv-film__item:active {
+	 transform: scale(1);
+} */
+ .tv-film__item:hover + .background-image {
+	 transform: scale(1.1);
+	 filter: blur(3px);
+	 will-change: transform, filter;
+}
+.mh-level {
+    position: fixed;
+    padding: 20px;
+    padding-bottom: 50px;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 100px;
+    z-index: 99999999;
+}
+#controls {
+    position: relative;
+}
+ 
+        </style>
+    </head>
+
+    <body>
+        <div class="fake-body">
+            <div class="mh-level" >
+                <div id="controls">
+                    <form class="form-inline">
+                        <!-- <button type="button" class="btn btn-default" id="backBtn" onclick="takeBack()";>Take Back</button> -->
+                        <select class="form-control" id="sel1" >
+                            <!-- <option value="5">Level: 5</option> -->
+                            <!-- <option value="4">Level: 4</option> -->
+                            <option value="3">Level: 3</option>
+                            <option value="2">Level: 2</option>
+                            <option value="1">Level: 1</option>
+                        </select>
+                        <button type="button" class="btn btn-primary" id="reset" onclick="newGame()";>New  Game</button>
+                    </form>
+                </div>
+                
+            </div>
+           
+            <div class="tv-film__item">
+                <div id="mainWindow" >
+                    <div id="piecesB"></div>
+                    <div id="board"></div>
+                    <div id="piecesW"></div>
+                </div>
+                <!-- <div class="tv-film__bg" in-vis >
+                </div> -->
+            </div>
+            
+        </div>
+        
+        <div class="background-image"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-6">
+                    <!-- <div id="mainWindow">
+                        <div id="piecesB"></div>
+                        <div id="board"></div>
+                        <div id="piecesW"></div>
+                    </div> -->
+                </div>
+                <div class="col-xs-12 col-sm-6">
+                    <div id="secondWindow">
+                        <h3><span id="status">White to move</span></h3>
+                        <div id="moveTable">
+                            <table class="table table-striped table-condensed" id="pgn">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>White</th>
+                                        <th>Black</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

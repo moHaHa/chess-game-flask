@@ -6,6 +6,9 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     return render_template("index.html")
+@app.route('/play')
+def play():
+    return render_template("play.html")
 
 
 @app.route('/move/<int:depth>/<path:fen>/')
@@ -19,10 +22,7 @@ def get_move(depth, fen):
     return move
 
 
-@app.route('/test/<string:tester>')
-def test_get(tester):
-    return tester
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
