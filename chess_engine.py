@@ -307,30 +307,12 @@ class Engine:
 
 
 
-# This is being used for testing at the moment, which is why there is so much commented code.
-# Will move to a standalone testing script when I get the chance.
+
 if __name__=="__main__":
 
     fen = "r2qkbr1/ppp1pppp/2n1b2n/8/8/5P2/PPPP2PP/RNB1KBNR b KQq - 0 6"
 
     newengine = Engine(fen)
-
-
-    # squares = newengine.board.pieces(1, chess.WHITE)
-    # for square in squares:
-    #     print (square)
-    # print(squares)
-
-    # print(newengine.board)
-    # print(newengine.order_moves())
-
-    # print(newengine.material_eval())
-    # print(newengine.lazy_eval())
-
-    # start_time = time.time()
-    # print(newengine.calculate(3))
-    # print(newengine.total_leaves())
-    # print("Time taken:", time.time() - start_time)
 
     start_time = time.time()
     print(newengine.calculate_ab(4))
@@ -341,9 +323,5 @@ if __name__=="__main__":
     print(newengine.iterative_deepening(4))
     print(newengine.total_leaves())
     print("Time taken:", time.time() - start_time)
-    # cProfile.run('newengine.calculate(3)')
-    #
-    # cProfile.run('newengine.calculate_ab(3)')
 
 
-    # print(newengine.board)
