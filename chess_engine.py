@@ -233,13 +233,13 @@ class Engine:
             move_sequence.append(best_move)
             return move_sequence, best_score
 
-    def calculate_minimax(self, depth):
-        # This shows up true for white & false for black
-        maximiser = self.board.turn
+    # def calculate_minimax(self, depth):
+    #     # This shows up true for white & false for black
+    #     maximiser = self.board.turn
 
-        best_move, best_score = self.minimax(depth, None, maximiser)
+    #     best_move, best_score = self.minimax(depth, None, maximiser)
 
-        return str(best_move)
+    #     return str(best_move)
 
 
     def calculate_ab(self, depth):
