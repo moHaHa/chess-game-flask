@@ -1,8 +1,6 @@
 import chess
 import random
-import signal
-import time
-import cProfile
+
 
 class Engine:
 
@@ -94,7 +92,7 @@ class Engine:
         return str(response)
 
 
-    def material_eval(self):
+    def who_is_better(self):
         score = 0
         # iterate through the pieces
         for i in range(1, 7):
@@ -125,7 +123,7 @@ class Engine:
 
     def minimax(self, depth, move, maximiser):
         if depth == 0:
-            # return move, self.material_eval()
+            # return move, self.who_is_better()
             return move, self.position_eval()
 
         if maximiser:
@@ -167,7 +165,7 @@ class Engine:
 
         # check if we're at the final search depth
         if depth_neg == 0:
-            # return move, self.material_eval()
+            # return move, self.who_is_better()
             move_sequence.append(move)
             return move_sequence, self.position_eval()
 
@@ -289,8 +287,8 @@ class Engine:
         scores = []
         for move in moves:
             self.board.push(move)
-            # scores.append(self.material_eval())
-            scores.append(self.material_eval())
+            # scores.append(self.who_is_better())
+            scores.append(self.who_is_better())
             self.board.pop()
         sorted_indexes = sorted(range(len(scores)), key=lambda i: scores[i], reverse=False)
         return [moves[i] for i in sorted_indexes]
@@ -314,14 +312,10 @@ if __name__=="__main__":
 
     newengine = Engine(fen)
 
-    start_time = time.time()
     print(newengine.calculate_ab(4))
     print(newengine.total_leaves())
-    print("Time taken:", time.time() - start_time)
 
-    start_time = time.time()
     print(newengine.iterative_deepening(4))
     print(newengine.total_leaves())
-    print("Time taken:", time.time() - start_time)
 
 
