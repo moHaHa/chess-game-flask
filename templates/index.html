@@ -14,7 +14,7 @@
     #wrapper {
       width: 12em;
       margin: 0 auto;
-      margin-top: 12.5em;
+      margin-top: 2.5em;
       transform-origin: 6em 6em;
       opacity: 0;
     }
@@ -769,18 +769,24 @@
       </svg>
     </div>
   </div>
-  <div flex text-center>
-    <a style="display: inline-block; margin-inline: auto;" href="/play" class="btn">Play Now</a>
-  </div>
-  <footer flex font-sans>
-    <div flex>
+  <div class="move-ap">
 
-      <div plg>Mohammad Al hallaq mohammad_157422</div>
-      <div plg>Mohammad Al hallaq mohammad_157422</div>
-      <div plg>Mohammad Al hallaq mohammad_157422</div>
-      <div plg>Mohammad Al hallaq mohammad_157422</div>
+    <div flex text-center>
+      <a style="display: inline-block; margin-inline: auto;" href="/play" class="btn">Play Now</a>
     </div>
-  </footer>
+    <footer  font-sans style="margin: auto;" >
+      <div flex style="display: flex ; flex-direction: column;">
+        
+        <div plg style="font-weight: 500;"> this game made by</div>
+        <div plg>Mohammad Al hallaq - mohammad_157422 - C3</div>
+        <div plg>Mohammad Al hallaq - mohammad_157422 - C3</div>
+        <div plg>Mohammad Al hallaq - mohammad_157422 - C3</div>
+        <div plg>Mohammad Al hallaq - mohammad_157422 - C3</div>
+    
+        <div plg>بإشراف الدكتور باسل الخطيب</div>
+      </div>
+    </footer>
+  </div>
   <script>
     // this code restarts the CSS animation otherwise it overlaps
     var work = setInterval(restartCSS, 4000);
@@ -797,6 +803,16 @@
       $("#wrapper").addClass("restart-css");
     }
   </script>
+  <style>
+    footer {
+      width: 100%;
+    margin: auto;
+    text-align: center;
+}
+.move-ap {
+  transform: translateY(-100px);
+}
+  </style>
 </body>
 
 </html>

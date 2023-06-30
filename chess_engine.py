@@ -87,12 +87,16 @@ class Engine:
         self.leaves_reached = 0
 
 
-    # random res 
+
+ 
+
+
+        # random res 
     def random_response(self):
         response = random.choice(list(self.board.legal_moves))
         return str(response)
 
-
+        
     # who is more able to win
     def who_is_better(self):
         score = 0
@@ -118,6 +122,7 @@ class Engine:
                 score -= self.square_table[i][square]
 
         return score
+
 
 
     # find the best movr
@@ -233,13 +238,7 @@ class Engine:
             move_sequence.append(best_move)
             return move_sequence, best_score
 
-    # def calculate_minimax(self, depth):
-    #     # This shows up true for white & false for black
-    #     maximiser = self.board.turn
-
-    #     best_move, best_score = self.minimax(depth, None, maximiser)
-
-    #     return str(best_move)
+ 
 
 
     def calculate_ab(self, depth):
@@ -255,18 +254,6 @@ class Engine:
         leaves = self.leaves_reached
         self.leaves_reached = 0
         return leaves
-
-
-    def order_moves(self):
-        moves = list(self.board.legal_moves)
-        scores = []
-        for move in moves:
-            self.board.push(move)
-            # scores.append(self.who_is_better())
-            scores.append(self.who_is_better())
-            self.board.pop()
-        sorted_indexes = sorted(range(len(scores)), key=lambda i: scores[i], reverse=False)
-        return [moves[i] for i in sorted_indexes]
 
 
     def iterative_deepening(self, depth):
