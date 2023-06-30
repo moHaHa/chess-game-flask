@@ -87,26 +87,26 @@ class Engine:
         self.leaves_reached = 0
 
 
+    # random res 
     def random_response(self):
         response = random.choice(list(self.board.legal_moves))
         return str(response)
 
 
+    # who is more able to win
     def who_is_better(self):
         score = 0
-        # iterate through the pieces
+       
         for i in range(1, 7):
             score += len(self.board.pieces(i, chess.WHITE)) * self.piece_values[i]
             score -= len(self.board.pieces(i, chess.BLACK)) * self.piece_values[i]
 
         return score
 
-
+    # MH* to evaluate the strength of a given chess position, based on the number and placement of the pieces on the board.
     def position_eval(self):
         score = 0
-        # iterate through the pieces
         for i in range(1, 7):
-            # eval white pieces
             w_squares = self.board.pieces(i, chess.WHITE)
             score += len(w_squares) * self.piece_values[i]
             for square in w_squares:
@@ -120,10 +120,9 @@ class Engine:
         return score
 
 
-
+    # find the best movr
     def minimax(self, depth, move, maximiser):
         if depth == 0:
-            # return move, self.who_is_better()
             return move, self.position_eval()
 
         if maximiser:
@@ -158,22 +157,18 @@ class Engine:
 
             return best_move, best_score
 
-
+    # to reduce the number of nodes that need to be evaluated
     def alpha_beta(self, depth_neg, depth_pos, move, alpha, beta, prev_moves, maximiser):
 
         move_sequence = []
 
-        # check if we're at the final search depth
         if depth_neg == 0:
-            # return move, self.who_is_better()
             move_sequence.append(move)
             return move_sequence, self.position_eval()
 
 
         moves = list(self.board.legal_moves)
-        # moves = self.order_moves()
 
-        # if there are no legal moves, check for checkmate / stalemate
         if not moves:
             if self.board.is_checkmate():
                 if self.board.result() == "1-0":
@@ -186,18 +181,13 @@ class Engine:
                 move_sequence.append(move)
                 return move_sequence, 0
 
-        # initialise best move variables. What are these used for again? I need to simplify the logic here.
         best_move = None
         best_score = -10000001 if maximiser else 10000001
 
-        # put the last calculated best move in first place of the list. Hopefully this improves pruning.
         if prev_moves and len(prev_moves) >= depth_neg:
             if depth_neg == 4 and not self.board.turn:
                 print(prev_moves[depth_neg - 1])
             if prev_moves[depth_neg - 1] in moves:
-            # if prev_moves[depth_neg - 1] in self.board.legal_moves:
-                # if not self.board.turn:
-                #     print(prev_moves[depth_neg - 1])
                 moves.insert(0, prev_moves[depth_neg - 1])
 
 
@@ -205,27 +195,19 @@ class Engine:
             for move in moves:
                 self.leaves_reached += 1
 
-                # get score of the new move, record what it is
                 self.board.push(move)
                 new_sequence, new_score = self.alpha_beta(depth_neg - 1, depth_pos + 1, move, alpha, beta, prev_moves, False)
                 self.board.pop()
 
-                # Check whether the new score is better than the best score. If so, replace the best score.
                 if new_score > best_score:
                     move_sequence = new_sequence
                     best_score, best_move = new_score, move
 
-                # Check whether the new score is better than the beta. If it is, return and break the loop.
-                # Need to rethink the check against best here.
                 if new_score >= beta:
-                    # self.check_against_best(best_move, best_score, depth_pos, True)
                     move_sequence.append(best_move)
                     return move_sequence, best_score
-                # Update alpha - upper bound
                 if new_score > alpha:
                     alpha = new_score
-            # return the best of the results
-            # self.check_against_best(best_move, best_score, depth_pos, True)
             move_sequence.append(best_move)
             return move_sequence, best_score
 
@@ -233,28 +215,21 @@ class Engine:
             for move in moves:
                 self.leaves_reached += 1
 
-                # get score of the new move, record what it is
                 self.board.push(move)
                 new_sequence, new_score = self.alpha_beta(depth_neg - 1, depth_pos + 1, move, alpha, beta, prev_moves, True)
                 self.board.pop()
 
-                # Check whether the new score is better than the best score. If so, replace the best score.
                 if new_score < best_score:
                     move_sequence = new_sequence
                     best_score, best_move = new_score, move
 
-                # Check whether the new score is better than the alpha. If it is, return and break the loop
                 if new_score <= alpha:
-                    # self.check_against_best(best_move, best_score, depth_pos, False)
                     move_sequence.append(best_move)
                     return move_sequence, best_score
 
-                # update beta - lower bound
                 if new_score < beta:
                     beta = new_score
 
-            # return the best of the results
-            # self.check_against_best(best_move, best_score, depth_pos, False)
             move_sequence.append(best_move)
             return move_sequence, best_score
 
